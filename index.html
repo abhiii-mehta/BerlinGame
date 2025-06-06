@@ -1,24 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Berlin Photo Explorer</title>
-    <link rel="stylesheet" href="styles.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Berlin Photo Explorer</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-    <h1>Berlin Photo Explorer</h1>
-    <div id="map"></div>
+  <h1>Berlin Photo Explorer</h1>
+  <div id="map"></div>
 
-    <!-- Load config.js which contains the API key -->
-    <script src="config.js"></script>
-
-    <!-- Inject the Maps script with the secure API key -->
-    <script>
-        document.write(`<script src="https://maps.googleapis.com/maps/api/js?key=${MAPS_API_KEY}&callback=initMap" async defer><\\/script>`);
-    </script>
-
-    <!-- Your main map logic -->
-    <script src="script.js"></script>
+  <!-- Load Google Maps with your key safely -->
+  <script src="config.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
