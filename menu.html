@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -33,36 +32,60 @@
 
     h1 {
       font-size: 24px;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
     }
 
-    button {
-      padding: 12px 24px;
+    input, button {
+      padding: 12px;
+      font-size: 16px;
       margin: 10px;
-      font-size: 18px;
-      cursor: pointer;
+      width: 80%;
     }
 
-    #credits {
-      margin-top: 20px;
-      font-size: 14px;
-      color: #666;
+    #credits, #leaderboard {
+      display: none;
+      text-align: center;
+    }
+
+    ul {
+      padding: 0;
+      list-style: none;
+    }
+
+    li {
+      margin: 4px 0;
     }
   </style>
 </head>
 <body>
   <div id="menu-container">
     <h1>Street View Race</h1>
+    <input type="text" id="playerNameInput" placeholder="Enter your name" />
     <button onclick="startGame()">Start</button>
+    <button onclick="showLeaderboard()">View Leaderboard</button>
     <button onclick="showCredits()">Credits</button>
-    <div id="credits" style="display:none;">
-      <p>Made by Abhi 🧠</p>
+
+    <div id="credits">
+      <p>Made by Abhi</p>
       <button onclick="hideCredits()">Close</button>
+    </div>
+
+    <div id="leaderboard">
+      <h2>🏆 Leaderboard</h2>
+      <ul id="leaderboardList"></ul>
+      <button onclick="resetLeaderboard()">Reset</button>
+      <button onclick="hideLeaderboard()">Close</button>
     </div>
   </div>
 
   <script>
     function startGame() {
+      const name = document.getElementById("playerNameInput").value.trim();
+      if (!name) {
+        alert("Please enter your name.");
+        return;
+      }
+      localStorage.setItem("currentPlayer", name);
       window.location.href = "index.html";
     }
 
@@ -72,6 +95,29 @@
 
     function hideCredits() {
       document.getElementById("credits").style.display = "none";
+    }
+
+    function showLeaderboard() {
+      document.getElementById("leaderboard").style.display = "block";
+      const leaderboard = JSON.parse(localStorage.getItem("leaderboard") || "[]");
+      leaderboard.sort((a, b) => a.time - b.time);
+
+      const list = document.getElementById("leaderboardList");
+      list.innerHTML = "";
+      leaderboard.forEach(entry => {
+        const li = document.createElement("li");
+        li.textContent = `${entry.name}: ${entry.time}s`;
+        list.appendChild(li);
+      });
+    }
+
+    function hideLeaderboard() {
+      document.getElementById("leaderboard").style.display = "none";
+    }
+
+    function resetLeaderboard() {
+      localStorage.removeItem("leaderboard");
+      showLeaderboard();
     }
   </script>
 </body>

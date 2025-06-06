@@ -5,6 +5,9 @@ let finished = false;
 const start = { lat: 52.5194, lng: 13.4265 }; // Strausberger Platz
 const destination = { lat: 52.521918, lng: 13.413215 }; // Alexanderplatz
 
+// Get player name from localStorage
+const playerName = localStorage.getItem("currentPlayer") || "Unknown";
+
 function startTimer() {
   timerInterval = setInterval(() => {
     secondsElapsed++;
@@ -19,6 +22,11 @@ function triggerCelebration() {
   confetti.style.display = "block";
   setTimeout(() => confetti.style.display = "none", 4000);
   if (navigator.vibrate) navigator.vibrate(300);
+
+  // Save score to leaderboard
+  const leaderboard = JSON.parse(localStorage.getItem("leaderboard") || "[]");
+  leaderboard.push({ name: playerName, time: secondsElapsed });
+  localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
 }
 
 function initMap() {
@@ -60,3 +68,5 @@ function initMap() {
     }
   });
 }
+
+window.initMap = initMap;
