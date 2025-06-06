@@ -98,18 +98,21 @@
     }
 
     function showLeaderboard() {
-      document.getElementById("leaderboard").style.display = "block";
-      const leaderboard = JSON.parse(localStorage.getItem("leaderboard") || "[]");
-      leaderboard.sort((a, b) => a.time - b.time);
+  document.getElementById("leaderboard").style.display = "block";
+  const leaderboard = JSON.parse(localStorage.getItem("leaderboard") || "[]");
+  leaderboard.sort((a, b) => a.time - b.time);
 
-      const list = document.getElementById("leaderboardList");
-      list.innerHTML = "";
-      leaderboard.forEach(entry => {
-        const li = document.createElement("li");
-        li.textContent = `${entry.name}: ${entry.time}s`;
-        list.appendChild(li);
-      });
-    }
+  const list = document.getElementById("leaderboardList");
+  list.innerHTML = "";
+  leaderboard.forEach(entry => {
+    const min = String(Math.floor(entry.time / 60)).padStart(2, '0');
+    const sec = String(entry.time % 60).padStart(2, '0');
+    const li = document.createElement("li");
+    li.textContent = `${entry.name}: ${min}:${sec}`;
+    list.appendChild(li);
+  });
+}
+
 
     function hideLeaderboard() {
       document.getElementById("leaderboard").style.display = "none";

@@ -10,6 +10,8 @@
   <!-- Google Maps API Key -->
   <script src="config.js"></script>
   <script src="script.js"></script>
+  <script src="pause.js"></script>
+
 
   <style>
     html, body {
@@ -79,8 +81,15 @@
       <p id="distanceLabel">📍 Calculating...</p>
       <p id="feedback"></p>
     </div>
-
     <div id="map"></div>
+    <!-- Pause Menu UI -->
+    <div id="pauseMenu" style="display:none; position:absolute; top:0; left:0; width:100%; height:100%; background-color: rgba(0,0,0,0.7); z-index:999; flex-direction: column; justify-content: center; align-items: center; color: white;">
+      <h2>Game Paused</h2>
+      <button onclick="resumeGame()">Resume</button>
+      <button onclick="restartGame()">Restart</button>
+      <button onclick="goToMainMenu()">Main Menu</button>
+    </div>
+
   </div>
 
   <script>
