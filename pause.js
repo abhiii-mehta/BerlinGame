@@ -1,4 +1,3 @@
-let isPaused = false;
 let hasStarted = false;
 
 document.addEventListener("keydown", (e) => {
@@ -11,9 +10,9 @@ function togglePause() {
   menu.style.display = isPaused ? "flex" : "none";
 
   if (isPaused) {
-    pauseTimer();     // Defined in script.js
+    pauseTimer();
   } else {
-    resumeTimer();    // Defined in script.js
+    resumeTimer();
   }
 }
 function resumeGame() {

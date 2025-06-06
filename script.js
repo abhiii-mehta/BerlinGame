@@ -1,7 +1,8 @@
-
+window.isPaused = false;
 let map, panorama, timerInterval;
 let secondsElapsed = 0;
 let finished = false;
+let gameStarted = false;
 
 const start = { lat: 52.5194, lng: 13.4265 }; // Strausberger Platz
 const destination = { lat: 52.521918, lng: 13.413215 }; // Alexanderplatz
@@ -38,17 +39,13 @@ function triggerCelebration() {
 
   const leaderboard = JSON.parse(localStorage.getItem("leaderboard") || "[]");
 
-  // Check if player already exists
   const existingEntryIndex = leaderboard.findIndex(entry => entry.name === playerName);
 
   if (existingEntryIndex !== -1) {
-    // If new time is better (lower), update it
     if (secondsElapsed < leaderboard[existingEntryIndex].time) {
       leaderboard[existingEntryIndex].time = secondsElapsed;
     }
-    // Else do nothing (worse time)
   } else {
-    // Add new entry
     leaderboard.push({ name: playerName, time: secondsElapsed });
   }
 
@@ -57,6 +54,9 @@ function triggerCelebration() {
 
 
 function initMap() {
+  document.getElementById("pauseMenu").style.display = "none";
+  isPaused = false;
+
   map = new google.maps.Map(document.getElementById("map"), {
     center: start,
     zoom: 14,
@@ -77,11 +77,16 @@ function initMap() {
   map.setStreetView(panorama);
 
   google.maps.event.addListenerOnce(panorama, "visible_changed", () => {
-    if (panorama.getVisible()) {
-      hasStarted = true;
-      startTimer();
-    }
-  });
+  if (panorama.getVisible() && !gameStarted) {
+    hasStarted = true;
+    gameStarted = true;
+    isPaused = false;
+    document.getElementById("pauseMenu").style.display = "none";
+    startTimer();
+  }
+});
+
+
 
   panorama.addListener("position_changed", () => {
     const currentPos = panorama.getPosition();

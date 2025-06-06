@@ -36,3 +36,42 @@ html, body {
   text-align: center;
   z-index: 10;
 }
+#pauseMenu {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 999;
+  color: white;
+
+  /* Flex layout */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+}
+
+#pauseMenu h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+#pauseMenu button {
+  padding: 10px 20px;
+  font-size: 16px;
+  min-width: 160px;
+  background: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: black;
+  transition: background 0.2s ease;
+}
+
+#pauseMenu button:hover {
+  background: #ddd;
+}
