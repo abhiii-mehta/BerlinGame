@@ -1,69 +1,62 @@
-let map;
-let panorama;
-let pegmanActive = false;
+let map, panorama, timerInterval;
+let secondsElapsed = 0;
+let finished = false;
 
-function loadGoogleMapsScript() {
-  const script = document.createElement("script");
-  script.src = `https://maps.googleapis.com/maps/api/js?key=${MAPS_API_KEY}&callback=initMap`;
-  script.async = true;
-  script.defer = true;
-  document.head.appendChild(script);
+const start = { lat: 52.5194, lng: 13.4265 }; // Strausberger Platz
+const destination = { lat: 52.521918, lng: 13.413215 }; // Alexanderplatz
+
+function startTimer() {
+  timerInterval = setInterval(() => {
+    secondsElapsed++;
+    const min = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
+    const sec = String(secondsElapsed % 60).padStart(2, '0');
+    document.getElementById("timer").textContent = `${min}:${sec}`;
+  }, 1000);
+}
+
+function triggerCelebration() {
+  const confetti = document.getElementById("confetti");
+  confetti.style.display = "block";
+  setTimeout(() => confetti.style.display = "none", 4000);
+  if (navigator.vibrate) navigator.vibrate(300);
 }
 
 function initMap() {
-  const berlinTower = { lat: 52.520816, lng: 13.409417 };
-
-  // Initialize the main map
   map = new google.maps.Map(document.getElementById("map"), {
-    center: berlinTower,
-    zoom: 15,
+    center: start,
+    zoom: 14,
     streetViewControl: false,
+    mapTypeControl: false,
   });
 
-  // Prepare the panorama view but don't show it initially
-  panorama = new google.maps.StreetViewPanorama(document.getElementById("map"), {
-    position: berlinTower,
-    pov: { heading: 34, pitch: 10 },
-    visible: false,
-  });
+  panorama = new google.maps.StreetViewPanorama(
+    document.getElementById("map"),
+    {
+      position: start,
+      pov: { heading: 0, pitch: 0 },
+      zoom: 1,
+      visible: true,
+    }
+  );
 
   map.setStreetView(panorama);
+  startTimer();
 
-  // Pegman click activates next map click to open street view
-  const pegmanButton = document.getElementById("pegman");
-  if (pegmanButton) {
-    pegmanButton.addEventListener("click", () => {
-      pegmanActive = true;
-      alert("Pegman active! Now click somewhere on the map to enter Street View.");
-    });
-  }
-
-  const streetViewService = new google.maps.StreetViewService();
-
-  // Click map to teleport to Street View
-  map.addListener("click", (e) => {
-    if (!pegmanActive) return;
-
-    const clickedLocation = e.latLng;
-
-    streetViewService.getPanorama(
-      {
-        location: clickedLocation,
-        radius: 50,
-      },
-      (data, status) => {
-        if (status === google.maps.StreetViewStatus.OK) {
-          panorama.setPosition(data.location.latLng);
-          panorama.setVisible(true);
-        } else {
-          alert("No Street View available here. Try somewhere nearby.");
-        }
-
-        pegmanActive = false;
-      }
+  panorama.addListener("position_changed", () => {
+    const currentPos = panorama.getPosition();
+    const dist = google.maps.geometry.spherical.computeDistanceBetween(
+      currentPos,
+      new google.maps.LatLng(destination.lat, destination.lng)
     );
+
+    document.getElementById("distanceLabel").textContent = `📍 ${Math.round(dist)}m away`;
+
+    if (dist <= 200 && !finished) {
+      clearInterval(timerInterval);
+      finished = true;
+      triggerCelebration();
+      document.getElementById("feedback").textContent =
+        `✅ You arrived in ${document.getElementById("timer").textContent}!`;
+    }
   });
 }
-
-// Start loading the Maps API
-loadGoogleMapsScript();

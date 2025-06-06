@@ -2,17 +2,88 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Berlin Photo Explorer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Street View Race Game</title>
   <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-  <h1>Berlin Photo Explorer</h1>
-  <div id="map"></div>
-  <div id="pegman" title="Click to activate Street View">👤</div>
-
-  <!-- Scripts -->
   <script src="config.js"></script>
   <script src="script.js"></script>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      font-family: sans-serif;
+      background-color: #f5f5f5;
+      overflow: hidden;
+    }
+
+    #app-wrapper {
+      width: 390px;
+      height: 844px;
+      margin: 0 auto;
+      border: 1px solid #ccc;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+      position: relative;
+      background-color: white;
+      overflow: hidden;
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+
+    #ui {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.95);
+      padding: 10px 15px;
+      border-radius: 12px;
+      text-align: center;
+      max-width: 90%;
+      z-index: 10;
+    }
+
+    #confetti {
+      position: absolute;
+      top: 0;
+      left: 0;
+      font-size: 2rem;
+      width: 100%;
+      text-align: center;
+      z-index: 999;
+      display: none;
+    }
+
+    @media (orientation: landscape) {
+      #ui {
+        top: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="app-wrapper">
+    <div id="confetti">🎉🎊✨ Woohoo! 🎉🎊✨</div>
+
+    <div id="ui">
+      <h2>Destination: <span id="destinationName">Alexanderplatz</span></h2>
+      <h3>Time: <span id="timer">00:00</span></h3>
+      <p id="distanceLabel">📍 Calculating...</p>
+      <p id="feedback"></p>
+    </div>
+
+    <div id="map"></div>
+  </div>
+
+  <script>
+    const script = document.createElement("script");
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${MAPS_API_KEY}&libraries=geometry&callback=initMap`;
+    script.async = true;
+    document.head.appendChild(script);
+  </script>
 </body>
 </html>
