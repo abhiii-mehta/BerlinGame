@@ -37,9 +37,24 @@ function triggerCelebration() {
   if (navigator.vibrate) navigator.vibrate(300);
 
   const leaderboard = JSON.parse(localStorage.getItem("leaderboard") || "[]");
-  leaderboard.push({ name: playerName, time: secondsElapsed });
+
+  // Check if player already exists
+  const existingEntryIndex = leaderboard.findIndex(entry => entry.name === playerName);
+
+  if (existingEntryIndex !== -1) {
+    // If new time is better (lower), update it
+    if (secondsElapsed < leaderboard[existingEntryIndex].time) {
+      leaderboard[existingEntryIndex].time = secondsElapsed;
+    }
+    // Else do nothing (worse time)
+  } else {
+    // Add new entry
+    leaderboard.push({ name: playerName, time: secondsElapsed });
+  }
+
   localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
 }
+
 
 function initMap() {
   map = new google.maps.Map(document.getElementById("map"), {
